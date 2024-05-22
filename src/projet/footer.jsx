@@ -13,7 +13,7 @@ export default function Footer() {
           textAlign: "center",
         }}
       >
-        <h4>Build by Abdul Basit</h4>
+        <h4>Build by Abdelghani</h4>
         <div
           style={{
             color: "#242424",

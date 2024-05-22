@@ -1,14 +1,14 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
-const styleh = {
+const containerStyle = {
   margin: "0 auto",
   maxWidth: "1010px",
   minHeight: "calc(100vh - 100px)",
   padding: "0 25px",
   width: "100%",
 };
-const stylet = {
+
+const headerStyle = {
   display: "flex",
   marginTop: "70px",
   backgroundColor: "#FFFFFF",
@@ -21,7 +21,7 @@ const stylet = {
   fontFamily: "poupin",
 };
 
-const stylearea = {
+const textareaStyle = {
   backgroundColor: "#fff",
   border: "1px solid #f7f7f7",
   color: "#242424",
@@ -33,8 +33,10 @@ const stylearea = {
   outline: "none",
   padding: "30px",
   width: "86%",
+  resize: "none",
 };
-const styled = {
+
+const footerStyle = {
   backgroundColor: "#fff",
   border: "1px solid #f7f7f7",
   display: "flex",
@@ -44,26 +46,130 @@ const styled = {
 };
 
 export default function Container() {
-  const [value, setvalue] = useState("");
+  const [text, setText] = useState("");
+  const [wordCount, setWordCount] = useState(0);
+  const [characterCount, setCharacterCount] = useState(0);
+  const [sentenceCount, setSentenceCount] = useState(0);
+  const [paragraphCount, setParagraphCount] = useState(0);
+  const [pronounCount, setPronounCount] = useState(0);
+  const [Longest, setLongest] = useState("");
+  const [reading, setreading] = useState("");
+
+  const readingtime = (text) => {
+    const wordsPerMinute = 200;
+    const readingTim = Math.ceil(wordCount / wordsPerMinute);
+    return readingTim;
+  };
+
+  const countLongestword = (sentence) => {
+    if (typeof sentence !== "string") {
+      return 0;
+    }
+    let words = sentence.trim().split(/\s+/);
+
+    let Longestword = words[0];
+    console.log("ranna", Longestword);
+    for (let index = 0; index < words.length; index++) {
+      if (words[index].length > Longestword.length) {
+        Longestword = words[index];
+      }
+    }
+    return Longestword;
+  };
+
+  const countPronouns = (text) => {
+    if (typeof text !== "string") return 0;
+
+    const pronouns = [
+      "he",
+      "she",
+      "it",
+      "they",
+      "we",
+      "i",
+      "you",
+      "me",
+      "him",
+      "her",
+      "us",
+      "them",
+      "myself",
+      "yourself",
+      "himself",
+      "herself",
+      "itself",
+      "ourselves",
+      "yourselves",
+      "themselves",
+    ];
+    const words = text.toLowerCase().split(" ");
+    let count = 0;
+    for (let word of words) {
+      if (pronouns.includes(word)) count++;
+    }
+    return count;
+  };
+
+  const countParagraphs = (text) => {
+    if (typeof text !== "string") return 0;
+    const paragraphs = text
+      .split("\n")
+      .filter((paragraph) => paragraph.trim().length > 0).length;
+    return paragraphs;
+  };
+
+  const countSentences = (sentence) => {
+    if (typeof sentence !== "string") {
+      return 0;
+    }
+    let Scount = sentence.trim().split(/[.?!]/).length;
+    return Scount;
+  };
+
+  const countCharacters = (text) => {
+    if (typeof text !== "string") return 0;
+    return text.replace(/\s+/g, "").length;
+  };
+
+  const countWords = (text) => {
+    if (typeof text !== "string") return 0;
+    const words = text
+      .split(" ")
+      .filter((word) => word.trim().length > 0).length;
+    return words;
+  };
+
+  const handleTextChange = (e) => {
+    const newText = e.target.value;
+    setText(newText);
+    setWordCount(countWords(newText));
+    setCharacterCount(countCharacters(newText));
+    setSentenceCount(countSentences(newText));
+    setParagraphCount(countParagraphs(newText));
+    setPronounCount(countPronouns(newText));
+    setLongest(countLongestword(newText));
+    setreading(readingtime(newText));
+  };
+
   return (
-    <div style={styleh}>
-      <div style={stylet}>
-        <p>Words</p>
-        <p>Characters</p>
-        <p>Sentences</p>
-        <p>Paragraphs</p>
-        <p>Pronouns</p>
+    <div style={containerStyle}>
+      <div style={headerStyle}>
+        <p>Words: {wordCount}</p>
+        <p>Characters: {characterCount}</p>
+        <p>Sentences: {sentenceCount}</p>
+        <p>Paragraphs: {paragraphCount}</p>
+        <p>Pronouns: {pronounCount}</p>
       </div>
       <textarea
-        style={stylearea}
-        placeholder="Past your text here..."
-        id=""
+        onChange={handleTextChange}
+        style={textareaStyle}
+        placeholder="Paste your text here..."
         cols="30"
         rows="10"
       ></textarea>
-      <div style={styled}>
-        <p>Average reacding time : - </p>
-        <p>Longest word : - </p>
+      <div style={footerStyle}>
+        <p>Average reading time: - {reading} min </p>
+        <p>Longest word: - {Longest} </p>
       </div>
     </div>
   );

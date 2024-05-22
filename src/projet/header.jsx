@@ -16,7 +16,7 @@ export default function Header() {
         
       }}
     >
-      <h3>Text Analyser</h3>
+      <h3>Text Analyser by Ghanou</h3>
       <div style={{ display: "flex",gap:30}}>
         <li>
           <a
